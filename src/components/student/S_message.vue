@@ -8,12 +8,12 @@
     </el-breadcrumb>
     <!-- 顶部选项框 -->
     <el-form :inline="true" :model="formInline" ref="formInline" class="demo-form-inline">
-      <el-form-item label="级别">
+      <el-form-item label="年级">
         <el-select v-model="formInline.level" placeholder="请选择年级">
-          <el-option label="17" value="17"></el-option>
-          <el-option label="18" value="18"></el-option>
-          <el-option label="19" value="19"></el-option>
-          <el-option label="20" value="20"></el-option>
+          <el-option :label="this.date" :value="this.date"></el-option>
+          <el-option :label="this.date - 1" :value="this.date - 1"></el-option>
+          <el-option :label="this.date - 2" :value="this.date - 2"></el-option>
+          <el-option :label="this.date - 3" :value="this.date - 3"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="院系">
@@ -82,12 +82,33 @@
       </div>
     </el-card>
     <!-- 添加学生按钮会话框 -->
-    <el-dialog title="添加学生" :visible.sync="dialogFormVisible">
-      <el-form :model="addStu">
-        <el-form-item label="姓名" :label-width="formLabelWidth">
-          <el-input v-model="addStu.name" autocomplete="off" class="addName"></el-input>
+    <el-dialog title="添加学生" :visible.sync="dialogFormVisible" width="330px" top="20px">
+      <el-form
+        :model="addStu"
+        :rules="rules"
+        label-position="right"
+        label-width="65px"
+        ref="addStu"
+      >
+        <!-- 年级 -->
+        <el-form-item label="年级" prop="level">
+          <el-select v-model="addStu.level" placeholder="请选择年级">
+            <el-option :label="this.date" :value="this.date"></el-option>
+            <el-option :label="this.date - 1" :value="this.date - 1"></el-option>
+            <el-option :label="this.date - 2" :value="this.date - 2"></el-option>
+            <el-option :label="this.date - 3" :value="this.date - 3"></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="院系">
+        <!-- 学号 -->
+        <el-form-item label="学号" prop="Snu">
+          <el-input v-model="addStu.Snu" autocomplete="off" class="addName" placeholder="请输入学号"></el-input>
+        </el-form-item>
+        <!-- 姓名 -->
+        <el-form-item label="姓名" prop="name">
+          <el-input v-model="addStu.name" autocomplete="off" class="addName" placeholder="请输入姓名"></el-input>
+        </el-form-item>
+        <!-- 院系 -->
+        <el-form-item label="院系" prop="department">
           <el-select
             v-model="addStu.department"
             placeholder="请选择院系"
@@ -96,20 +117,31 @@
             <el-option v-for="(value, key) in deps" :key="key" :label="value" :value="value"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="专业">
+        <!-- 专业 -->
+        <el-form-item label="专业" prop="major">
           <el-select v-model="addStu.major" placeholder="请选择专业">
-            <el-option
-              v-for="(value, key) in majs"
-              :key="key"
-              :label="value"
-              :value="value"
-            ></el-option>
+            <el-option v-for="(value, key) in majs" :key="key" :label="value" :value="value"></el-option>
           </el-select>
+        </el-form-item>
+        <!-- 性别 -->
+        <el-form-item label="性别" prop="Sex">
+          <el-select v-model="addStu.Sex" placeholder="性别">
+            <el-option label="男" value="男"></el-option>
+            <el-option label="女" value="女"></el-option>
+          </el-select>
+        </el-form-item>
+        <!-- 年龄 -->
+        <el-form-item label="年龄" prop="age">
+          <el-input v-model="addStu.age" placeholder="年龄" autocomplete="off" class="addName"></el-input>
+        </el-form-item>
+        <!-- 手机号 -->
+        <el-form-item label="手机号" prop="phone">
+          <el-input v-model="addStu.phone" placeholder="手机号" autocomplete="off" class="addName"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+        <el-button type="primary" @click="addStudent()">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -118,6 +150,18 @@
 <script>
 export default {
   data() {
+    // zi定义手机号校验规则
+    var checkphone = (rule, value, callback) => {
+      // let phoneReg = /(^1[3|4|5|6|7|8|9]\d{9}$)|(^09\d{8}$)/;
+      if (value == "") {
+        callback(new Error("请输入手机号"));
+      } else if (!this.isCellPhone(value)) {
+        //引入methods中封装的检查手机格式的方法
+        callback(new Error("请输入正确的手机号!"));
+      } else {
+        callback();
+      }
+    };
     return {
       formInline: {
         level: "",
@@ -137,15 +181,16 @@ export default {
       dialogTableVisible: false,
       dialogFormVisible: false,
       addStu: {
+        level: "",
         Snu: "",
         name: "",
-        password: "",
+        password: "888888",
         department: "",
         major: "",
         age: "",
         Sex: "",
         phone: "",
-        creation_time: Date()
+        creation_time: JSON.stringify(Date())
       },
       formLabelWidth: "40px",
       // 所有可选择院系
@@ -155,7 +200,31 @@ export default {
       // 院系对应的专业
       majs: [],
       // 所有专业
-      majorList: []
+      majorList: [],
+      // 年级
+      date: new Date().getFullYear(),
+      // 添加学生表单校验
+      rules: {
+        level: [{ required: true, message: "请输入年级", trigger: "blur" }],
+        Snu: [
+          { required: true, message: "请输入学号", trigger: "blur" },
+          {
+            require: true,
+            min: 11,
+            max: 11,
+            message: "学号长度为13位",
+            trigger: "blur"
+          }
+        ],
+        name: [{ required: true, message: "请输入姓名", trigger: "blur" }],
+        department: [
+          { required: true, message: "请选择院系", trigger: "blur" }
+        ],
+        major: [{ required: true, message: "请选择专业", trigger: "blur" }],
+        Sex: [{ required: true, message: "请选择性别", trigger: "blur" }],
+        age: [{ required: true, message: "请输入年龄", trigger: "blur" }],
+        phone: [{ validator: checkphone, required: true, trigger: "blur" }]
+      }
     };
   },
   created() {
@@ -163,6 +232,14 @@ export default {
     this.selectmajorList();
   },
   methods: {
+    //检查手机号
+    isCellPhone(val) {
+      if (!/^1(3|4|5|6|7|8)\d{9}$/.test(val)) {
+        return false;
+      } else {
+        return true;
+      }
+    },
     // 查询所有的院系
     async selectdepartment() {
       const { data: res } = await this.$http.get("department");
@@ -226,6 +303,20 @@ export default {
     },
     handleCurrentChange(val) {
       this.queryInfo.pagenum = val;
+    },
+    // 添加学生
+    addStudent() {
+      this.$refs.addStu.validate(async valid => {
+        if (!valid) {
+          return;
+        }
+        const { data: res } = await this.$http.post("addStu", this.addStu);
+        if (res.meta.status == 204) {
+          return this.$message.error("添加失败,该学号已存在");
+        }
+        this.$message.success(res.meta.msg);
+        this.dialogFormVisible = false;
+      });
     }
   }
 };
