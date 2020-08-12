@@ -58,14 +58,27 @@
         <el-table-column prop="major" label="专业" align="center"></el-table-column>
         <el-table-column prop="phone" label="联系方式" align="center"></el-table-column>
         <el-table-column label="编辑" align="center">
-          <el-button-group>
+          <template slot-scope="scope">
+            <!-- <span>{{ scope.$index }}{{ scope.row.Snu }}</span> -->
             <el-tooltip class="item" effect="dark" content="编辑信息" placement="top">
-              <el-button type="primary" title="编辑" size="medium" icon="el-icon-edit"></el-button>
+              <el-button
+                type="primary"
+                title="编辑"
+                size="medium"
+                icon="el-icon-edit"
+                @click="showEditDialog(scope.row.Snu)"
+              ></el-button>
             </el-tooltip>
             <el-tooltip class="item" effect="dark" content="删除信息" placement="top">
-              <el-button type="danger" title="删除" size="medium" icon="el-icon-delete"></el-button>
+              <el-button
+                type="danger"
+                title="删除"
+                size="medium"
+                icon="el-icon-delete"
+                @click="removeUserBySnu(scope.row.Snu)"
+              ></el-button>
             </el-tooltip>
-          </el-button-group>
+          </template>
         </el-table-column>
       </el-table>
       <!-- 分页区域 -->
@@ -144,6 +157,42 @@
         <el-button type="primary" @click="addStudent()">确 定</el-button>
       </div>
     </el-dialog>
+    <!-- 修改学生信息对话框 -->
+    <el-dialog
+      title="修改学生信息"
+      :visible.sync="editStudentVisible"
+      width="330px"
+      top="20px"
+      @close="editDialogClosed"
+    >
+      <el-form
+        :model="editStu"
+        ref="editStu"
+        :rules="rules"
+        label-position="right"
+        label-width="65px"
+      >
+        <el-form-item label="学号">
+          <el-input v-model="editStu.Snu" autocomplete="off" disabled class="addName"></el-input>
+        </el-form-item>
+        <el-form-item label="姓名" prop="name">
+          <el-input v-model="editStu.name" autocomplete="off" class="addName"></el-input>
+        </el-form-item>
+        <el-form-item label="学院" prop="department">
+          <el-input v-model="editStu.department" autocomplete="off" class="addName"></el-input>
+        </el-form-item>
+        <el-form-item label="专业" prop="major">
+          <el-input v-model="editStu.major" autocomplete="off" class="addName"></el-input>
+        </el-form-item>
+        <el-form-item label="手机号" prop="phone">
+          <el-input v-model="editStu.phone" class="addName"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="editStudentVisible = false">取 消</el-button>
+        <el-button type="primary" @click="editDialogConfirm()">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -178,8 +227,10 @@ export default {
       total: 0,
       // 获取学生列表
       studentlist: [],
-      dialogTableVisible: false,
+      // 添加学生对话框
       dialogFormVisible: false,
+      // 修改学生信息对话框
+      editStudentVisible: false,
       addStu: {
         level: "",
         Snu: "",
@@ -203,6 +254,8 @@ export default {
       majorList: [],
       // 年级
       date: new Date().getFullYear(),
+      // 修改学生信息表单
+      editStu: {},
       // 添加学生表单校验
       rules: {
         level: [{ required: true, message: "请输入年级", trigger: "blur" }],
@@ -262,7 +315,6 @@ export default {
         }
         this.$message.success(res.meta.msg);
         this.studentlist = res.data;
-        console.log(this.studentlist);
         this.total = res.count;
       });
     },
@@ -316,7 +368,66 @@ export default {
         }
         this.$message.success(res.meta.msg);
         this.dialogFormVisible = false;
+        this.selectStudent();
       });
+    },
+    // 修改信息按钮
+    async showEditDialog(Snu) {
+      // console.log(typeof this.editStu);
+      this.editStudentVisible = true;
+      console.log(Snu);
+      const { data: res } = await this.$http.get("/editStu", {
+        params: { Snu: Snu }
+      });
+      this.editStu = res.data;
+    },
+    // 编辑学生信息对话框右上角的关闭按钮
+    editDialogClosed() {
+      this.$refs.editStu.resetFields();
+    },
+    editDialogConfirm() {
+      this.$refs.editStu.validate(async valid => {
+        if (!valid) {
+          return;
+        }
+        const { data: res } = await this.$http.post(
+          "editStudent",
+          this.editStu
+        );
+        if (res.meta.status == 201) {
+          this.$message.success(res.meta.msg);
+        }
+        this.$message.success(res.meta.msg);
+        this.editStudentVisible = false;
+        this.selectStudent();
+      });
+    },
+    // 根据学号删除学生
+    async removeUserBySnu(Snu) {
+      // 询问是否确定删除
+      const confirmResult = await this.$confirm(
+        "此操作将永久删除该用户, 是否继续?",
+        "提示",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }
+      ).catch(err => err);
+      // 如果用户点击确定，则返回字符串confirm
+      // 如果用户点击确定，则返回字符串cancel
+      console.log(confirmResult);
+      if (confirmResult !== "confirm") {
+        return this.$message.error("已取消删除");
+      }
+      const { data: res } = await this.$http.delete("editStudent/" + Snu);
+      if (res.meta.status == 201) {
+        this.$message.success("删除成功");
+      } else {
+        this.$message.error("删除失败");
+      }
+      // 刷新数据列表
+      this.selectStudent();
     }
   }
 };
