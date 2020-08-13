@@ -5,12 +5,23 @@ const Login = () =>
   import(
     /* webpackChunkName: "login_home_welcome" */ "../components/Login.vue"
   );
-import Home from "../components/Home.vue";
 import Register from "../components/Register.vue";
+// 学生功能
 const Student = () => import("../components/student/Student.vue");
+const s_message = () => import("../components/student/s_message.vue");
+const S_grade = () => import("../components/student/S_grade.vue");
+const S_course = () => import("../components/student/S_course.vue");
+const S_select_course = () =>
+  import("../components/student/S_select_course.vue");
+
+// 管理员功能
 const Admin = () => import("../components/admin/Admin.vue");
+const S_message = () => import("../components/admin/S_message.vue");
+
+// 教师功能
 const Teacher = () => import("../components/teacher/Teacher.vue");
-const S_message = () => import("../components/student/S_message.vue");
+
+// 通用功能
 const Welcome = () => import("../components/Welcome.vue");
 
 Vue.use(VueRouter);
@@ -20,12 +31,24 @@ export default new VueRouter({
     { path: "/", redirect: "/Login" },
     { path: "/login", component: Login },
     { path: "/register", component: Register },
-    { path: "/home", component: Home },
-    { path: "/student", component: Student },
     {
-      path: "/admin", component: Admin, redirect: "/welcome",
+      path: "/student",
+      component: Student,
+      redirect: "/welcome",
       children: [
-        { path: '/welcome', component: Welcome },
+        { path: "/welcome", component: Welcome },
+        { path: "/student/s_message", component: s_message },
+        { path: "/student/s_course", component: S_course },
+        { path: "/student/s_grade", component: S_grade },
+        { path: "/student/s_select_course", component: S_select_course }
+      ]
+    },
+    {
+      path: "/admin",
+      component: Admin,
+      redirect: "/admin/welcome",
+      children: [
+        { path: "/admin/welcome", component: Welcome },
         { path: "/admin/s_message", component: S_message }
       ]
     },

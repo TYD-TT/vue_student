@@ -2,7 +2,7 @@
   <div class="welcome">
     <el-row :gutter="10">
       <el-col :span="24">
-        <h1>欢迎使用学会管理系统</h1>
+        <h1>欢迎使用学生管理系统</h1>
       </el-col>
     </el-row>
     <div class="rili">

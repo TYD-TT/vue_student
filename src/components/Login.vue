@@ -19,10 +19,6 @@
         <el-form-item label="密码" prop="password" class="password">
           <el-input type="password" v-model="ruleForm.password" autocomplete="off"></el-input>
         </el-form-item>
-        <div class="hint">
-          还没有账号？
-          <a href="/#/register">现在创建...</a>
-        </div>
         <el-form-item label>
           <el-radio-group v-model="ruleForm.radio">
             <el-radio :label="0">学生</el-radio>
@@ -51,14 +47,14 @@ export default {
     };
     return {
       ruleForm: {
-        username: "admin",
-        password: "admin",
+        username: "17031110101",
+        password: "888888",
         radio: 0
       },
       rules: {
         username: [
           { required: true, message: "请输入学号/教工号", trigger: "blur" },
-          { min: 3, max: 6, message: "长度在 3 到 6 个字符", trigger: "blur" }
+          { min: 3, max: 11, message: "长度在 3 到 6 个字符", trigger: "blur" }
         ],
         password: [{ validator: validatePass, required: true, trigger: "blur" }]
       }
@@ -92,6 +88,10 @@ export default {
             this.$router.push("/admin");
             break;
         }
+        console.log(this.ruleForm.radio);
+        // 将用户名保存到localStorage
+        localStorage.setItem("username", this.ruleForm.username);
+        localStorage.setItem("pwd", this.ruleForm.password);
       });
     }
   }
