@@ -251,8 +251,8 @@ export default {
         }
         this.$message.success(res.meta.msg);
         localStorage.removeItem("username");
-      localStorage.removeItem("pwd");
-      this.logout();
+        localStorage.removeItem("pwd");
+        this.logout();
       });
     }
   }
