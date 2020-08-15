@@ -13,7 +13,7 @@ const S_grade = () => import("../components/student/S_grade.vue");
 const S_course = () => import("../components/student/S_course.vue");
 const S_select_course = () =>
   import("../components/student/S_select_course.vue");
-
+const S_timetable = () => import("../components/student/S_timetable.vue");
 // 管理员功能
 const Admin = () => import("../components/admin/Admin.vue");
 const S_message = () => import("../components/admin/S_message.vue");
@@ -40,7 +40,8 @@ export default new VueRouter({
         { path: "/student/s_message", component: s_message },
         { path: "/student/s_course", component: S_course },
         { path: "/student/s_grade", component: S_grade },
-        { path: "/student/s_select_course", component: S_select_course }
+        { path: "/student/s_select_course", component: S_select_course },
+        { path: "/student/s_timetable", component: S_timetable }
       ]
     },
     {

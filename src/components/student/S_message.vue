@@ -191,8 +191,8 @@ export default {
       const { data: res } = await this.$http.get("editStu", {
         params: { Snu: snu }
       });
-      this.stuMsg = res.data;
-      this.editStu = res.data[0];
+      this.stuMsg = [res.data];
+      this.editStu = res.data;
     },
     // 修改信息按钮
     showEditDialog() {

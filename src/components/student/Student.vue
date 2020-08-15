@@ -49,13 +49,13 @@
           <el-menu-item index="1">
             <i class="el-icon-s-custom"></i>
             <span slot="title">
-              <a href="/#/student/s_message">基本信息</a>
+              <router-link :to="'/student/s_message'">基本信息</router-link>
             </span>
           </el-menu-item>
           <el-menu-item index="2">
             <i class="el-icon-menu"></i>
             <span slot="title">
-              <a href="/#/student/s_grade">查看成绩</a>
+              <router-link :to="'/student/s_grade'">查看成绩</router-link>
             </span>
           </el-menu-item>
           <el-submenu index="3">
@@ -66,19 +66,21 @@
             <el-menu-item-group>
               <el-menu-item index="1-1">
                 <i class="el-icon-postcard"></i>
-                <a href="/#/student/s_select_course">选课</a>
+                <router-link :to="'/student/s_select_course'">选课</router-link>
               </el-menu-item>
             </el-menu-item-group>
             <el-menu-item-group>
-              <el-menu-item index="1-2">
+              <el-menu-item index="/student/s_course">
                 <i class="el-icon-trophy"></i>
-                <a href="/#/student/s_course">选课结果</a>
+                <router-link :to="'/student/s_course'">选课结果</router-link>
               </el-menu-item>
             </el-menu-item-group>
           </el-submenu>
           <el-menu-item index="4">
             <i class="el-icon-menu"></i>
-            <span slot="title">课程表</span>
+            <span slot="title">
+              <router-link :to="'/student/s_timetable'">课程表</router-link>
+            </span>
           </el-menu-item>
         </el-menu>
       </el-aside>
