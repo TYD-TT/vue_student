@@ -42,7 +42,9 @@
           </el-submenu>
           <el-menu-item index="2">
             <i class="el-icon-s-custom"></i>
-            <span slot="title">教师信息</span>
+            <span slot="title">
+              <a href="#/admin/t_message">教师信息</a>
+            </span>
           </el-menu-item>
           <el-menu-item index="3">
             <i class="el-icon-document"></i>

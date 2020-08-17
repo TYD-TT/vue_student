@@ -17,6 +17,7 @@ const S_timetable = () => import("../components/student/S_timetable.vue");
 // 管理员功能
 const Admin = () => import("../components/admin/Admin.vue");
 const S_message = () => import("../components/admin/S_message.vue");
+const T_message = () => import("../components/admin/T_message.vue");
 
 // 教师功能
 const Teacher = () => import("../components/teacher/Teacher.vue");
@@ -50,7 +51,8 @@ export default new VueRouter({
       redirect: "/admin/welcome",
       children: [
         { path: "/admin/welcome", component: Welcome },
-        { path: "/admin/s_message", component: S_message }
+        { path: "/admin/s_message", component: S_message },
+        { path: "/admin/t_message", component: T_message }
       ]
     },
     { path: "/teacher", component: Teacher }

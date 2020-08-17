@@ -3,38 +3,21 @@
     <!-- 面包屑导航 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/admin' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>学生信息</el-breadcrumb-item>
-      <el-breadcrumb-item>基本信息</el-breadcrumb-item>
+      <el-breadcrumb-item>教师信息</el-breadcrumb-item>
+      <!-- <el-breadcrumb-item>基本信息</el-breadcrumb-item> -->
     </el-breadcrumb>
     <!-- 顶部选项框 -->
     <el-form :inline="true" :model="formInline" ref="formInline" class="demo-form-inline">
-      <el-form-item label="年级">
-        <el-select v-model="formInline.level" placeholder="请选择年级">
-          <el-option :label="this.date" :value="this.date"></el-option>
-          <el-option :label="this.date - 1" :value="this.date - 1"></el-option>
-          <el-option :label="this.date - 2" :value="this.date - 2"></el-option>
-          <el-option :label="this.date - 3" :value="this.date - 3"></el-option>
-        </el-select>
-      </el-form-item>
       <el-form-item label="院系">
-        <el-select
-          v-model="formInline.department"
-          placeholder="请选择院系"
-          @change="btn(formInline.department)"
-        >
+        <el-select v-model="formInline.department" placeholder="请选择院系">
           <el-option v-for="(value, index) in deps" :key="index" :label="value" :value="value"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="专业">
-        <el-select v-model="formInline.major" placeholder="请选择专业">
-          <el-option v-for="(value, index) in majs" :key="index" :label="value" :value="value"></el-option>
-        </el-select>
+      <el-form-item>
+        <el-button type="primary" @click="selectTeacher('formInline')">查询</el-button>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="selectStudent('formInline')">查询</el-button>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="success" @click="dialogFormVisible = true">添加学生</el-button>
+        <el-button type="success" @click="dialogFormVisible = true">添加教师</el-button>
       </el-form-item>
     </el-form>
 
@@ -42,7 +25,7 @@
       <!-- 显示搜索内容区域 -->
       <el-table
         :data="
-          studentlist.slice(
+          Teacherlist.slice(
             (queryInfo.pagenum - 1) * queryInfo.pagesize,
             queryInfo.pagenum * queryInfo.pagesize
           )
@@ -52,10 +35,9 @@
         style="width: 100%"
       >
         <el-table-column type="index" label="#" align="center"></el-table-column>
-        <el-table-column prop="Snu" label="学号" width="180" align="center"></el-table-column>
+        <el-table-column prop="Tnu" label="教工号" width="180" align="center"></el-table-column>
         <el-table-column prop="name" label="姓名" width="180" align="center"></el-table-column>
         <el-table-column prop="department" label="院系" align="center"></el-table-column>
-        <el-table-column prop="major" label="专业" align="center"></el-table-column>
         <el-table-column prop="phone" label="联系方式" align="center"></el-table-column>
         <el-table-column label="编辑" align="center">
           <template slot-scope="scope">
@@ -65,7 +47,7 @@
                 title="编辑"
                 size="medium"
                 icon="el-icon-edit"
-                @click="showEditDialog(scope.row.Snu)"
+                @click="showEditDialog(scope.row.Tnu)"
               ></el-button>
             </el-tooltip>
             <el-tooltip class="item" effect="dark" content="删除信息" placement="top">
@@ -74,7 +56,7 @@
                 title="删除"
                 size="medium"
                 icon="el-icon-delete"
-                @click="removeUserBySnu(scope.row.Snu)"
+                @click="removeUserByTnu(scope.row.Tnu)"
               ></el-button>
             </el-tooltip>
           </template>
@@ -93,102 +75,85 @@
         ></el-pagination>
       </div>
     </el-card>
-    <!-- 添加学生按钮会话框 -->
-    <el-dialog title="添加学生" :visible.sync="dialogFormVisible" width="330px" top="20px">
+    <!-- 添加教师按钮会话框 -->
+    <el-dialog title="添加教师" :visible.sync="dialogFormVisible" width="330px" top="20px">
       <el-form
-        :model="addStu"
+        :model="addTea"
         :rules="rules"
         label-position="right"
         label-width="65px"
-        ref="addStu"
+        ref="addTea"
       >
-        <!-- 年级 -->
-        <el-form-item label="年级" prop="level">
-          <el-select v-model="addStu.level" placeholder="请选择年级">
-            <el-option :label="this.date" :value="this.date"></el-option>
-            <el-option :label="this.date - 1" :value="this.date - 1"></el-option>
-            <el-option :label="this.date - 2" :value="this.date - 2"></el-option>
-            <el-option :label="this.date - 3" :value="this.date - 3"></el-option>
-          </el-select>
-        </el-form-item>
-        <!-- 学号 -->
-        <el-form-item label="学号" prop="Snu">
-          <el-input v-model="addStu.Snu" autocomplete="off" class="addName" placeholder="请输入学号"></el-input>
+        <!-- 教工号 -->
+        <el-form-item label="教工号" prop="Tnu">
+          <el-input v-model="addTea.Tnu" autocomplete="off" class="addName" placeholder="请输入教工号"></el-input>
         </el-form-item>
         <!-- 姓名 -->
         <el-form-item label="姓名" prop="name">
-          <el-input v-model="addStu.name" autocomplete="off" class="addName" placeholder="请输入姓名"></el-input>
+          <el-input v-model="addTea.name" autocomplete="off" class="addName" placeholder="请输入姓名"></el-input>
         </el-form-item>
         <!-- 院系 -->
         <el-form-item label="院系" prop="department">
-          <el-select
-            v-model="addStu.department"
-            placeholder="请选择院系"
-            @change="btn(addStu.department)"
-          >
+          <el-select v-model="addTea.department" placeholder="请选择院系">
             <el-option v-for="(value, key) in deps" :key="key" :label="value" :value="value"></el-option>
-          </el-select>
-        </el-form-item>
-        <!-- 专业 -->
-        <el-form-item label="专业" prop="major">
-          <el-select v-model="addStu.major" placeholder="请选择专业">
-            <el-option v-for="(value, key) in majs" :key="key" :label="value" :value="value"></el-option>
           </el-select>
         </el-form-item>
         <!-- 性别 -->
         <el-form-item label="性别" prop="Sex">
-          <el-select v-model="addStu.Sex" placeholder="性别">
+          <el-select v-model="addTea.Sex" placeholder="性别">
             <el-option label="男" value="男"></el-option>
             <el-option label="女" value="女"></el-option>
           </el-select>
         </el-form-item>
         <!-- 年龄 -->
         <el-form-item label="年龄" prop="age">
-          <el-input v-model="addStu.age" placeholder="年龄" autocomplete="off" class="addName"></el-input>
+          <el-input v-model="addTea.age" placeholder="年龄" autocomplete="off" class="addName"></el-input>
         </el-form-item>
         <!-- 手机号 -->
         <el-form-item label="手机号" prop="phone">
-          <el-input v-model="addStu.phone" placeholder="手机号" autocomplete="off" class="addName"></el-input>
+          <el-input v-model="addTea.phone" placeholder="手机号" autocomplete="off" class="addName"></el-input>
         </el-form-item>
+        <!-- <el-form-item label="创建时间">
+          <el-input :model="addTea.creation_time | dataFormat" v-model="addTea.creation_time"></el-input>
+        </el-form-item> -->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="addStudent()">确 定</el-button>
+        <el-button type="primary" @click="addTeacher()">确 定</el-button>
       </div>
     </el-dialog>
-    <!-- 修改学生信息对话框 -->
+    <!-- 修改教师信息对话框 -->
     <el-dialog
-      title="修改学生信息"
-      :visible.sync="editStudentVisible"
+      title="修改教师信息"
+      :visible.sync="editTeacherVisible"
       width="330px"
       top="20px"
       @close="editDialogClosed"
     >
       <el-form
-        :model="editStu"
-        ref="editStu"
+        :model="editTea"
+        ref="editTea"
         :rules="rules"
         label-position="right"
         label-width="65px"
       >
-        <el-form-item label="学号">
-          <el-input v-model="editStu.Snu" autocomplete="off" disabled class="addName"></el-input>
+        <el-form-item label="教工号">
+          <el-input v-model="editTea.Tnu" autocomplete="off" disabled class="addName"></el-input>
         </el-form-item>
         <el-form-item label="姓名" prop="name">
-          <el-input v-model="editStu.name" autocomplete="off" class="addName"></el-input>
+          <el-input v-model="editTea.name" autocomplete="off" class="addName"></el-input>
         </el-form-item>
-        <el-form-item label="学院" prop="department">
-          <el-input v-model="editStu.department" autocomplete="off" class="addName"></el-input>
-        </el-form-item>
-        <el-form-item label="专业" prop="major">
-          <el-input v-model="editStu.major" autocomplete="off" class="addName"></el-input>
+        <el-form-item label="院系" prop="department">
+          <el-select v-model="editTea.department" placeholder="请选择院系">
+            <el-option v-for="(value, key) in deps" :key="key" :label="value" :value="value"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="手机号" prop="phone">
-          <el-input v-model="editStu.phone" class="addName"></el-input>
+          <el-input v-model="editTea.phone" class="addName"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="editStudentVisible = false">取 消</el-button>
+        <el-button @click="editTeacherVisible = false">取 消</el-button>
         <el-button type="primary" @click="editDialogConfirm()">确 定</el-button>
       </div>
     </el-dialog>
@@ -212,9 +177,7 @@ export default {
     };
     return {
       formInline: {
-        level: "",
-        department: "",
-        major: ""
+        department: ""
       },
       // 分页
       queryInfo: {
@@ -224,19 +187,17 @@ export default {
       },
       // 总数据条数
       total: 0,
-      // 获取学生列表
-      studentlist: [],
-      // 添加学生对话框
+      // 获取教师列表
+      Teacherlist: [],
+      // 添加教师对话框
       dialogFormVisible: false,
-      // 修改学生信息对话框
-      editStudentVisible: false,
-      addStu: {
-        level: "",
-        Snu: "",
+      // 修改教师信息对话框
+      editTeacherVisible: false,
+      addTea: {
+        Tnu: "",
         name: "",
         password: "888888",
         department: "",
-        major: "",
         age: "",
         Sex: "",
         phone: "",
@@ -244,27 +205,32 @@ export default {
       },
       formLabelWidth: "40px",
       // 所有可选择院系
-      deps: [],
-      // 记录下标
-      depsKey: 0,
-      // 院系对应的专业
-      majs: [],
-      // 所有专业
-      majorList: [],
-      // 年级
-      date: new Date().getFullYear(),
-      // 修改学生信息表单
-      editStu: {},
-      // 添加学生表单校验
+      deps: [
+        "机械工程学院",
+        "电子信息与电气工程学院 ",
+        "计算机科学与信息工程学院 ",
+        "土木与建筑工程学院 ",
+        "化学与环境工程学院 ",
+        "生物与食品工程学院",
+        "数理学院",
+        "飞行学院",
+        "经济管理学院",
+        "文法学院",
+        "外国语学院",
+        "艺术设计学院",
+        "国际教育学院"
+      ],
+      // 修改教师信息表单
+      editTea: {},
+      // 添加教师表单校验
       rules: {
-        level: [{ required: true, message: "请输入年级", trigger: "blur" }],
-        Snu: [
-          { required: true, message: "请输入学号", trigger: "blur" },
+        Tnu: [
+          { required: true, message: "请输入教工号", trigger: "blur" },
           {
             require: true,
-            min: 11,
-            max: 11,
-            message: "学号长度为13位",
+            min: 10,
+            max: 10,
+            message: "教工号长度为10位",
             trigger: "blur"
           }
         ],
@@ -272,7 +238,6 @@ export default {
         department: [
           { required: true, message: "请选择院系", trigger: "blur" }
         ],
-        major: [{ required: true, message: "请选择专业", trigger: "blur" }],
         Sex: [{ required: true, message: "请选择性别", trigger: "blur" }],
         age: [{ required: true, message: "请输入年龄", trigger: "blur" }],
         phone: [{ validator: checkphone, required: true, trigger: "blur" }]
@@ -281,7 +246,6 @@ export default {
   },
   created() {
     this.selectdepartment();
-    this.selectmajorList();
   },
   methods: {
     //检查手机号
@@ -298,55 +262,25 @@ export default {
       for (let index = 0; index < res.length; index++) {
         this.deps[index] = res[index].department;
       }
+      this.Teacherlist.dep = this.deps;
     },
-    // 根据条件查询学生列表
-    selectStudent() {
+    // 根据条件查询教师列表
+    selectTeacher() {
       this.$refs.formInline.validate(async valid => {
         if (!valid) {
           return;
         }
         const { data: res } = await this.$http.post(
-          "information",
+          "teacher_message",
           this.formInline
         );
-        if (res.meta.status == 204) {
+        if (res.meta.status != 201) {
           return this.$message.error(res.meta.msg);
         }
         this.$message.success(res.meta.msg);
-        this.studentlist = res.data;
+        this.Teacherlist = res.data;
         this.total = res.count;
       });
-    },
-    // 根据院系查询专业
-    async selectmajor() {
-      this.majs = [];
-      const { data: res } = await this.$http.post("major", {
-        depnum: this.depsKey + 1
-      });
-      for (let index = 0; index < res.length; index++) {
-        this.majs[index] = res[index].major;
-      }
-      return this.majs;
-    },
-    // 查询所有的专业
-    async selectmajorList() {
-      const { data: res } = await this.$http.get("major");
-      this.majorList = res;
-    },
-    // 监听院系选择框
-    btn(value) {
-      this.majs = [];
-      for (let index = 0; index < this.deps.length; index++) {
-        if (this.deps[index] == value) {
-          this.depsKey = index;
-          var tem = 0;
-          for (let j = 0; j < this.majorList.length; j++) {
-            if (this.majorList[j].depnum == this.depsKey + 1) {
-              this.majs[tem++] = this.majorList[j].major;
-            }
-          }
-        }
-      }
     },
     // 分页切换
     handleSizeChange(val) {
@@ -355,55 +289,56 @@ export default {
     handleCurrentChange(val) {
       this.queryInfo.pagenum = val;
     },
-    // 添加学生
-    addStudent() {
-      this.addStu.creation_time = this.datatime();
-      this.$refs.addStu.validate(async valid => {
+    // 添加教师
+    addTeacher() {
+      this.addTea.creation_time = this.datatime();
+      this.$refs.addTea.validate(async valid => {
         if (!valid) {
           return;
         }
-        const { data: res } = await this.$http.post("addStu", this.addStu);
-        if (res.meta.status == 204) {
-          return this.$message.error("添加失败,该学号已存在");
+        const { data: res } = await this.$http.post("addTea", this.addTea);
+        if (res.meta.status != 201) {
+          return this.$message.error("添加失败,该教工号已存在");
         }
         this.$message.success(res.meta.msg);
         this.dialogFormVisible = false;
-        this.selectStudent();
+        this.selectTeacher();
+        this.addTea = {};
       });
     },
     // 修改信息按钮
-    async showEditDialog(Snu) {
-      // console.log(typeof this.editStu);
-      this.editStudentVisible = true;
-      console.log(Snu);
-      const { data: res } = await this.$http.get("/editStu", {
-        params: { Snu: Snu }
+    async showEditDialog(Tnu) {
+      // console.log(typeof this.editTea);
+      this.editTeacherVisible = true;
+      const { data: res } = await this.$http.get("/editTea", {
+        params: { Tnu: Tnu }
       });
-      this.editStu = res.data;
+      this.editTea = res.data;
     },
-    // 编辑学生信息对话框右上角的关闭按钮
+    // 编辑教师信息对话框右上角的关闭按钮
     editDialogClosed() {
-      this.$refs.editStu.resetFields();
+      this.$refs.editTea.resetFields();
     },
+    // 修改教师信息确定提交
     editDialogConfirm() {
-      this.$refs.editStu.validate(async valid => {
+      this.$refs.editTea.validate(async valid => {
         if (!valid) {
           return;
         }
         const { data: res } = await this.$http.post(
-          "editStudent",
-          this.editStu
+          "editTeacher",
+          this.editTea
         );
-        if (res.meta.status == 201) {
-          this.$message.success(res.meta.msg);
+        if (res.meta.status != 201) {
+          return this.$message.error(res.meta.msg);
         }
         this.$message.success(res.meta.msg);
-        this.editStudentVisible = false;
-        this.selectStudent();
+        this.editTeacherVisible = false;
+        this.selectTeacher();
       });
     },
-    // 根据学号删除学生
-    async removeUserBySnu(Snu) {
+    // 根据教工号删除教师
+    async removeUserByTnu(Tnu) {
       // 询问是否确定删除
       const confirmResult = await this.$confirm(
         "此操作将永久删除该用户, 是否继续?",
@@ -420,14 +355,14 @@ export default {
       if (confirmResult !== "confirm") {
         return this.$message.error("已取消删除");
       }
-      const { data: res } = await this.$http.delete("editStudent/" + Snu);
+      const { data: res } = await this.$http.delete("editStudent/" + Tnu);
       if (res.meta.status == 201) {
         this.$message.success("删除成功");
       } else {
         this.$message.error("删除失败");
       }
       // 刷新数据列表
-      this.selectStudent();
+      this.selectTeacher();
     },
     // 时间过滤器
     datatime() {
@@ -442,6 +377,10 @@ export default {
 
       return `${y}-${m}-${d} ${hh}:${mm}:${ss}`;
     }
+    // 修改创建时间
+    // editDateTime() {
+    //   this.addTea.creation_time = this.datatime();
+    // }
   }
 };
 </script>
