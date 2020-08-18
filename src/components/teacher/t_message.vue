@@ -1,17 +1,16 @@
 <template>
-  <div class="student_message">
+  <div class="teadent_message">
     <!-- 面包屑导航 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
-      <el-breadcrumb-item :to="{ path: '/student' }">首页</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/teadent' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item>基本信息</el-breadcrumb-item>
     </el-breadcrumb>
     <el-card>
-      <el-table :data="stuMsg" style="width: 100%">
+      <el-table :data="teaMsg" style="width: 100%">
         <!-- <el-table-column type="index" label="#" align="center"></el-table-column> -->
         <el-table-column prop="name" align="center" label="姓名"></el-table-column>
-        <el-table-column prop="Snu" align="center" label="学号"></el-table-column>
+        <el-table-column prop="Tnu" align="center" label="学号"></el-table-column>
         <el-table-column prop="department" align="center" label="院系" width="190px"></el-table-column>
-        <el-table-column prop="major" align="center" label="专业"></el-table-column>
         <el-table-column prop="phone" align="center" label="手机号"></el-table-column>
         <el-table-column label="编辑" align="center">
           <el-tooltip class="item" effect="dark" content="修改信息" placement="top">
@@ -40,36 +39,33 @@
     <!-- 修改学生信息对话框 -->
     <el-dialog
       title="修改学生信息"
-      :visible.sync="editStudentVisible"
+      :visible.sync="editTeadentVisible"
       width="330px"
       top="20px"
       @close="editDialogClosed"
     >
       <el-form
-        :model="editStu"
-        ref="editStu"
+        :model="editTea"
+        ref="editTea"
         :rules="rules"
         label-position="right"
         label-width="65px"
       >
-        <el-form-item label="学号">
-          <el-input v-model="editStu.Snu" autocomplete="off" disabled class="addName"></el-input>
+        <el-form-item label="教工号">
+          <el-input v-model="editTea.Tnu" autocomplete="off" disabled class="addName"></el-input>
         </el-form-item>
         <el-form-item label="姓名" prop="name">
-          <el-input v-model="editStu.name" autocomplete="off" class="addName"></el-input>
+          <el-input v-model="editTea.name" autocomplete="off" class="addName"></el-input>
         </el-form-item>
         <el-form-item label="学院" prop="department">
-          <el-input v-model="editStu.department" autocomplete="off" class="addName"></el-input>
-        </el-form-item>
-        <el-form-item label="专业" prop="major">
-          <el-input v-model="editStu.major" autocomplete="off" class="addName"></el-input>
+          <el-input v-model="editTea.department" autocomplete="off" class="addName"></el-input>
         </el-form-item>
         <el-form-item label="手机号" prop="phone">
-          <el-input v-model="editStu.phone" class="addName"></el-input>
+          <el-input v-model="editTea.phone" class="addName"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="editStudentVisible = false">取 消</el-button>
+        <el-button @click="editTeadentVisible = false">取 消</el-button>
         <el-button type="primary" @click="editDialogConfirm()">确 定</el-button>
       </div>
     </el-dialog>
@@ -141,9 +137,9 @@ export default {
       }
     };
     return {
-      stuMsg: [],
+      teaMsg: [],
       // 修改学生信息表单
-      editStu: {},
+      editTea: {},
       // 修改密码表单
       pwdForm: {
         num: "",
@@ -154,7 +150,7 @@ export default {
       // 表单校验
       rules: {
         level: [{ required: true, message: "请输入年级", trigger: "blur" }],
-        Snu: [
+        Tnu: [
           { required: true, message: "请输入学号", trigger: "blur" },
           {
             require: true,
@@ -177,26 +173,26 @@ export default {
         ]
       },
       // 隐藏修改信息对话框
-      editStudentVisible: false,
+      editTeadentVisible: false,
       // 隐藏修改密码对话框
       pwdDialogVisible: false
     };
   },
   created() {
-    this.selectStudent();
+    this.selectTeadent();
   },
   methods: {
-    async selectStudent() {
-      const snu = localStorage.getItem("username");
-      const { data: res } = await this.$http.get("editStu", {
-        params: { Snu: snu }
+    async selectTeadent() {
+      const tnu = localStorage.getItem("username");
+      const { data: res } = await this.$http.get("editTea", {
+        params: { Tnu: tnu }
       });
-      this.stuMsg = [res.data];
-      this.editStu = res.data;
+      this.teaMsg = [res.data];
+      this.editTea = res.data;
     },
     // 修改信息按钮
     showEditDialog() {
-      this.editStudentVisible = true;
+      this.editTeadentVisible = true;
     },
     //检查手机号
     isCellPhone(val) {
@@ -208,24 +204,24 @@ export default {
     },
     // 编辑学生信息对话框右上角的关闭按钮
     editDialogClosed() {
-      this.$refs.editStu.resetFields();
+      this.$refs.editTea.resetFields();
       // this.$refs.pwdForm.resetFields();
     },
     editDialogConfirm() {
-      this.$refs.editStu.validate(async valid => {
+      this.$refs.editTea.validate(async valid => {
         if (!valid) {
           return;
         }
         const { data: res } = await this.$http.post(
           "editMsgById",
-          this.editStu
+          this.editTea
         );
         if (res.meta.status == 201) {
           this.$message.success(res.meta.msg);
         }
         this.$message.success(res.meta.msg);
-        this.editStudentVisible = false;
-        this.selectStudent();
+        this.editTeadentVisible = false;
+        this.selectTeadent();
       });
     },
     changePwd() {
@@ -245,7 +241,10 @@ export default {
         if (!valid) {
           return;
         }
-        const { data: res } = await this.$http.post("changepwd", this.pwdForm);
+        const { data: res } = await this.$http.post(
+          "changeTeapwd",
+          this.pwdForm
+        );
         if (res.meta.status !== 201) {
           return this.$message.error(res.meta.msg);
         }

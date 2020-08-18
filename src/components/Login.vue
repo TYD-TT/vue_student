@@ -47,9 +47,9 @@ export default {
     };
     return {
       ruleForm: {
-        username: "17031110101",
+        username: "ay20171001",
         password: "888888",
-        radio: 0
+        radio: 1
       },
       rules: {
         username: [

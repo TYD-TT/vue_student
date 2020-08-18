@@ -21,6 +21,7 @@ const T_message = () => import("../components/admin/T_message.vue");
 
 // 教师功能
 const Teacher = () => import("../components/teacher/Teacher.vue");
+const t_message = () => import("../components/teacher/t_message.vue");
 
 // 通用功能
 const Welcome = () => import("../components/Welcome.vue");
@@ -55,6 +56,15 @@ export default new VueRouter({
         { path: "/admin/t_message", component: T_message }
       ]
     },
-    { path: "/teacher", component: Teacher }
+    {
+      path: "/teacher",
+      component: Teacher,
+      redirect: "/teacher/welcome",
+      children: [
+        { path: "/teacher/welcome", component: Welcome },
+        { path: "/teacher/t_message", component: t_message },
+        { path: "/teacher/s_message", component: S_message }
+      ]
+    }
   ]
 });
