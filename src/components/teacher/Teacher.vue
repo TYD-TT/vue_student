@@ -66,7 +66,7 @@
             <el-menu-item-group>
               <el-menu-item index="1-1">
                 <i class="el-icon-postcard"></i>
-                <router-link :to="'/teacher/select_grade'">查看成绩</router-link>
+                <router-link :to="'/teacher/view_grade'">查看成绩</router-link>
               </el-menu-item>
             </el-menu-item-group>
             <el-menu-item-group>
