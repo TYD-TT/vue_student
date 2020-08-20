@@ -1,5 +1,11 @@
 <template>
   <div>
+    <!-- 面包屑导航 -->
+    <el-breadcrumb separator-class="el-icon-arrow-right">
+      <el-breadcrumb-item :to="{ path: '/teacher' }">首页</el-breadcrumb-item>
+      <el-breadcrumb-item>学生成绩</el-breadcrumb-item>
+      <el-breadcrumb-item>评判成绩</el-breadcrumb-item>
+    </el-breadcrumb>
     <el-table :data="tableData" stripe style="width: 650px">
       <el-table-column prop="Snu" label="学号" width="200" align="center"></el-table-column>
       <el-table-column prop="name" label="姓名" width="200" align="center"></el-table-column>
@@ -51,5 +57,9 @@ export default {
 <style lang="less" scoped>
 .input-width {
   width: 120px;
+}
+.el-breadcrumb {
+  height: 40px;
+  line-height: 40px;
 }
 </style>
