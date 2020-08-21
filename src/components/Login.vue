@@ -54,7 +54,7 @@ export default {
       rules: {
         username: [
           { required: true, message: "请输入学号/教工号", trigger: "blur" },
-          { min: 3, max: 11, message: "长度在 3 到 6 个字符", trigger: "blur" }
+          { min: 5, max: 11, message: "长度在 5 到 11 个字符", trigger: "blur" }
         ],
         password: [{ validator: validatePass, required: true, trigger: "blur" }]
       }
@@ -73,7 +73,8 @@ export default {
         }
         const { data: res } = await this.$http.post("login", this.ruleForm);
         console.log(res);
-        if (res.meta.status !== 201) {
+        console.log(res.meta.status);
+        if (res.meta.status != 201) {
           return this.$message.error("登陆失败,账号或密码错误");
         }
         this.$message.success("登录成功");
@@ -88,7 +89,6 @@ export default {
             this.$router.push("/admin");
             break;
         }
-        console.log(this.ruleForm.radio);
         // 将用户名保存到localStorage
         localStorage.setItem("username", this.ruleForm.username);
         localStorage.setItem("pwd", this.ruleForm.password);
