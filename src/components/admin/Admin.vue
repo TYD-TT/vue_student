@@ -31,7 +31,7 @@
             <el-menu-item-group>
               <el-menu-item index="1-1">
                 <i class="el-icon-postcard"></i>
-                <a href="/#/admin/s_message">基本信息</a>
+                <a href="/#/admin/a_s_message">基本信息</a>
               </el-menu-item>
             </el-menu-item-group>
             <el-menu-item-group>
@@ -43,13 +43,27 @@
           <el-menu-item index="2">
             <i class="el-icon-s-custom"></i>
             <span slot="title">
-              <a href="#/admin/t_message">教师信息</a>
+              <a href="#/admin/a_t_message">教师信息</a>
             </span>
           </el-menu-item>
-          <el-menu-item index="3">
-            <i class="el-icon-document"></i>
-            <span slot="title">导航三</span>
-          </el-menu-item>
+          <el-submenu index="3">
+            <template slot="title">
+              <i class="el-icon-s-home"></i>
+              <span slot="title" style="color:#fff">院系扩展</span>
+            </template>
+            <el-menu-item-group>
+              <el-menu-item index="3-1">
+                <i class="el-icon-school"></i>
+                <a href="/#/admin/A_department">学院</a>
+              </el-menu-item>
+            </el-menu-item-group>
+            <el-menu-item-group>
+              <el-menu-item index="3-2">
+                <i class="el-icon-office-building"></i>
+                <a href="/#/admin/A_major">专业</a>
+              </el-menu-item>
+            </el-menu-item-group>
+          </el-submenu>
         </el-menu>
       </el-aside>
 

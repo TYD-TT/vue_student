@@ -29,23 +29,6 @@
           @close="handleClose"
           :collapse="isCollapse"
         >
-          <!-- <el-submenu index="1">
-            <template slot="title">
-              <i class="el-icon-s-custom"></i>
-              <span slot="title" style="color:#fff">基本信息</span>
-            </template>
-            <el-menu-item-group>
-              <el-menu-item index="1-1">
-                <i class="el-icon-postcard"></i>
-                <a href="/#/admin/s_message">基本信息</a>
-              </el-menu-item>
-            </el-menu-item-group>
-            <el-menu-item-group>
-              <el-menu-item index="1-2">
-                <i class="el-icon-trophy"></i> 学生成绩
-              </el-menu-item>
-            </el-menu-item-group>
-          </el-submenu>-->
           <el-menu-item index="1">
             <i class="el-icon-s-custom"></i>
             <span slot="title">
